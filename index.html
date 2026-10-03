@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premier Mini Cricket Auction 2026 | Tournament Management</title>
+  <meta name="description" content="Complete Mini Cricket Auction Tournament Management Web Application with real-time bidding, team purse tracking, player registration, and responsive dashboards.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="brand" onclick="app.navigateTo('landing')">
+      <div class="brand-logo">🏏</div>
+      <div>
+        <div class="brand-title" id="navTournamentTitle">PMCL 2026</div>
+        <div class="brand-subtitle">Cricket Auction Portal</div>
+      </div>
+    </div>
+
+    <ul class="nav-menu">
+      <li class="nav-item"><a class="nav-link active" data-view="landing" onclick="app.navigateTo('landing')">Home</a></li>
+      <li class="nav-item"><a class="nav-link" data-view="players" onclick="app.navigateTo('players')">Players Directory</a></li>
+      <li class="nav-item"><a class="nav-link" data-view="squads" onclick="app.navigateTo('squads')">Team Squads</a></li>
+      <li class="nav-item"><a class="nav-link" data-view="public-live" onclick="app.navigateTo('public-live')">🔴 Live Auction</a></li>
+      <li class="nav-item"><a class="nav-link" data-view="organizer" onclick="app.navigateTo('organizer')">Organizer Hub</a></li>
+      <li class="nav-item"><a class="nav-link" data-view="captain" onclick="app.navigateTo('captain')">Captain Portal</a></li>
+    </ul>
+
+    <div class="header-actions">
+      <button type="button" class="btn btn-primary btn-sm" onclick="app.openRegisterModal()">+ Register Player</button>
+      <button type="button" class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light/Dark Theme">🌙</button>
+      <button type="button" class="mobile-menu-toggle" onclick="app.toggleMobileMenu()">☰</button>
+    </div>
+  </header>
+
+  <!-- Main Application Container -->
+  <main class="main-content">
+
+    <!-- 1. LANDING PAGE VIEW -->
+    <section id="view-landing" class="view-section active">
+      <div class="hero-banner">
+        <div class="hero-logo" id="heroLogoDisplay">🏆</div>
+        <h1 class="hero-title" id="heroTitle">Premier Mini Cricket League 2026</h1>
+        <p style="color: var(--text-secondary); max-width: 650px;">Experience the high-octane excitement of real-time cricket player bidding, dynamic team budget management, and comprehensive tournament tracking.</p>
+
+        <div class="hero-meta">
+          <div class="hero-meta-item">📅 <span id="heroDate">Oct 15, 2026</span></div>
+          <div class="hero-meta-item">📍 <a href="https://www.google.com/maps/search/?api=1&query=Metropolis+Cricket+Ground+(MCG)" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline; cursor: pointer;" id="heroVenueLink"><span id="heroVenue">Metropolis Cricket Ground (MCG)</span></a></div>
+          <div class="hero-meta-item">💰 Purse/Team: <strong style="color: var(--accent-gold);" id="heroPurse">₹1,00,000</strong></div>
+        </div>
+
+        <div class="hero-cta">
+          <button class="btn btn-primary btn-lg" onclick="app.openRegisterModal()">🏏 Register as Player</button>
+          <button class="btn btn-outline-gold btn-lg" onclick="app.openAddTeamModal()">🧢 Register Team & Captain</button>
+          <button class="btn btn-secondary btn-lg" onclick="app.navigateTo('captain')">🧢 Captain Portal</button>
+          <button class="btn btn-secondary btn-lg" onclick="app.navigateTo('organizer')">🔒 Admin Portal</button>
+          <button class="btn btn-success btn-lg" onclick="app.navigateTo('public-live')">🔴 Spectator Live Screen</button>
+        </div>
+      </div>
+
+      <!-- Live Tournament Counter Stats (3 Stat Cards) -->
+      <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div>
+            <div class="stat-value" id="statPlayersCount">0</div>
+            <div class="stat-label">Total Players Registered</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🛡️</div>
+          <div>
+            <div class="stat-value" id="statTeamsCount">0</div>
+            <div class="stat-label">Total Teams</div>
+          </div>
+        </div>
+        <div class="stat-card" style="flex-direction: column; align-items: flex-start; justify-content: center;">
+          <div style="display: flex; align-items: center; gap: 1rem; width: 100%;">
+            <div class="stat-icon">💰</div>
+            <div>
+              <div class="stat-value" id="statTotalPurse">₹6,00,000</div>
+              <div class="stat-label">Total Purse</div>
+            </div>
+          </div>
+          <div style="width: 100%; margin-top: 0.75rem;">
+            <div class="purse-progress-track" style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+              <div class="purse-progress-bar" id="purseProgressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--accent-gold), var(--accent-green)); transition: width 0.3s ease;"></div>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.35rem;" id="purseProgressLabel">Spent: ₹0 / Total: ₹6,00,000</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Category Highlights -->
+      <div class="section-header">
+        <h2 class="section-title">Player Categories</h2>
+        <button class="btn btn-secondary btn-sm" onclick="app.navigateTo('players')">View All Players →</button>
+      </div>
+      <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-bottom: 3rem;">
+        <div class="stat-card" style="cursor: pointer;" onclick="app.navigateTo('players', {category: 'Batsman'})">
+          <div class="stat-icon">🏏</div>
+          <div>
+            <div class="stat-value" id="catCountBatsmen">5</div>
+            <div class="stat-label">Batsmen</div>
+          </div>
+        </div>
+        <div class="stat-card" style="cursor: pointer;" onclick="app.navigateTo('players', {category: 'Bowler'})">
+          <div class="stat-icon">🎯</div>
+          <div>
+            <div class="stat-value" id="catCountBowlers">5</div>
+            <div class="stat-label">Bowlers</div>
+          </div>
+        </div>
+        <div class="stat-card" style="cursor: pointer;" onclick="app.navigateTo('players', {category: 'All-Rounder'})">
+          <div class="stat-icon">🔄</div>
+          <div>
+            <div class="stat-value" id="catCountAllRounders">4</div>
+            <div class="stat-label">All-Rounders</div>
+          </div>
+        </div>
+        <div class="stat-card" style="cursor: pointer;" onclick="app.navigateTo('players', {category: 'Wicket-Keeper'})">
+          <div class="stat-icon">🧤</div>
+          <div>
+            <div class="stat-value" id="catCountKeepers">4</div>
+            <div class="stat-label">Wicket-Keepers</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rules & Contact Section -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+        <div class="stat-card" style="flex-direction: column; align-items: flex-start;">
+          <h3 style="font-family: var(--font-display); font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">📜 Tournament Rules</h3>
+          <pre id="landingRulesText" style="white-space: pre-wrap; font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.75rem; font-family: inherit;"></pre>
+        </div>
+        <div class="stat-card" style="flex-direction: column; align-items: flex-start;">
+          <h3 style="font-family: var(--font-display); font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">📞 Contact & Information</h3>
+          <div style="margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem; color: var(--text-secondary);">
+            <div>📞 <strong>Phone:</strong> <span id="contactPhoneDisplay">+91 98765 43210</span></div>
+            <div>✉️ <strong>Email:</strong> <span id="contactEmailDisplay">organizer@pmcl2026.org</span></div>
+            <div>📍 <strong>City:</strong> <span id="contactCityDisplay">Metropolis</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- 2. PLAYER DIRECTORY VIEW -->
+    <section id="view-players" class="view-section">
+      <div class="players-directory-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <div style="color: var(--accent-gold); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;" id="playersTournamentName">Premier Mini Cricket League 2026</div>
+          <h2 class="section-title" style="margin-top: 0.25rem;">Registered Players Directory</h2>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+          <span class="badge status-approved" id="totalRegBadge" style="font-size: 0.9rem; padding: 0.4rem 0.85rem;">Total Registrations: 0 Players</span>
+          <button class="btn btn-primary btn-sm" onclick="app.openRegisterModal()">+ Register New Player</button>
+        </div>
+      </div>
+
+      <!-- Category Quick Tabs -->
+      <div class="tabs-header" id="playerCatTabs">
+        <button class="tab-btn active" data-cat="ALL">All Roles</button>
+        <button class="tab-btn" data-cat="Batsman">🏏 BATSMEN</button>
+        <button class="tab-btn" data-cat="Bowler">🎯 BOWLERS</button>
+        <button class="tab-btn" data-cat="All-Rounder">🔄 ALL-ROUNDERS</button>
+        <button class="tab-btn" data-cat="Wicket-Keeper">🧤 WICKET-KEEPERS</button>
+      </div>
+
+      <!-- Search & Filter Controls Bar -->
+      <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+        <div style="display: flex; gap: 0.75rem; flex: 1; min-width: 280px; flex-wrap: wrap;">
+          <input type="text" class="form-input" id="playerSearchInput" placeholder="🔍 Search by name or phone..." style="flex: 1; min-width: 200px;">
+          <select class="form-select" id="playerRoleSelect" onchange="app.renderPlayersDirectory()">
+            <option value="ALL">All Roles</option>
+            <option value="Batsman">Batsman</option>
+            <option value="Bowler">Bowler</option>
+            <option value="All-Rounder">All-Rounder</option>
+            <option value="Wicket-Keeper">Wicket-Keeper</option>
+          </select>
+          <select class="form-select" id="playerStatusSelect" onchange="app.renderPlayersDirectory()">
+            <option value="ALL">All Statuses</option>
+            <option value="Registered">Registered</option>
+            <option value="Available">Available</option>
+            <option value="Sold">Sold</option>
+            <option value="Unsold">Unsold</option>
+          </select>
+          <select class="form-select" id="playerSortSelect" onchange="app.renderPlayersDirectory()">
+            <option value="name">Sort by Name</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="category">Sort by Category</option>
+          </select>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-secondary btn-sm" id="btnGridView" onclick="app.setPlayerViewMode('grid')">Grid</button>
+          <button class="btn btn-secondary btn-sm" id="btnListView" onclick="app.setPlayerViewMode('list')">List</button>
+        </div>
+      </div>
+
+      <!-- Players Cards Container -->
+      <div class="players-grid" id="playersContainer">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+
+    <!-- 3. TEAM SQUADS VIEW -->
+    <section id="view-squads" class="view-section">
+      <div class="section-header">
+        <h2 class="section-title">Team Squads & Financials</h2>
+        <button class="btn btn-secondary btn-sm" onclick="exportCtrl.exportTeamSquadsExcel()">📊 Export Squads (Excel)</button>
+      </div>
+
+      <!-- Teams Tab Bar -->
+      <div class="tabs-header" id="teamTabs">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Selected Team Roster View -->
+      <div id="teamSquadContainer">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+
+    <!-- 4. PUBLIC SPECTATOR LIVE AUCTION VIEW -->
+    <section id="view-public-live" class="view-section">
+      <div class="section-header">
+        <h2 class="section-title">🔴 Live Auction Spectator Screen</h2>
+        <span class="badge status-approved">Real-time Broadcast</span>
+      </div>
+
+      <div class="auction-arena">
+        <div class="auction-main-card">
+          <div class="auction-player-hero">
+            <img id="pubPlayerPhoto" src="" class="auction-player-photo-lg" alt="Player Photo">
+            <div>
+              <div class="badge badge-batsman" id="pubPlayerCategory">Category</div>
+              <h2 style="font-size: 2.25rem; font-family: var(--font-display); font-weight: 800; margin: 0.5rem 0 0.25rem;" id="pubPlayerName">Select Player to Begin</h2>
+              <div style="color: var(--accent-gold); font-weight: 700; font-size: 1.1rem;" id="pubPlayerId">PLY-1000</div>
+
+              <div style="display: flex; gap: 1.5rem; margin-top: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+                <div>Batting: <strong style="color: var(--text-primary);" id="pubPlayerBatting">Right Hand</strong></div>
+                <div>Bowling: <strong style="color: var(--text-primary);" id="pubPlayerBowling">Fast</strong></div>
+                <div>Base Price: <strong style="color: var(--accent-gold);" id="pubPlayerBasePrice">₹2,000</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="auction-bid-display">
+            <div>
+              <div style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase;">Current Highest Bid</div>
+              <div class="current-bid-amount" id="pubCurrentBid">₹0</div>
+            </div>
+
+            <div class="highest-bidder-box">
+              <div class="highest-bidder-logo" id="pubBidderLogo">🏆</div>
+              <div>
+                <div style="font-size: 0.8rem; color: var(--text-secondary);">Highest Bidding Team</div>
+                <div style="font-weight: 700; font-size: 1.1rem; color: var(--text-primary);" id="pubBidderTeamName">No Bids Yet</div>
+              </div>
+            </div>
+
+            <div class="timer-badge" id="pubTimerBadge">⏱️ 30s</div>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 0.75rem;">📜 Live Bidding Stream</h3>
+          <div class="bid-feed" id="pubBidFeed">
+            <div style="text-align: center; color: var(--text-muted); padding: 2rem;">Waiting for bids to commence...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- 5. ORGANIZER DASHBOARD VIEW -->
+    <section id="view-organizer" class="view-section">
+      <div class="section-header">
+        <h2 class="section-title">👑 Tournament Organizer & Admin Dashboard</h2>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button class="btn btn-secondary btn-sm" onclick="exportCtrl.exportAllPlayersCSV()">📥 Export CSV</button>
+          <button class="btn btn-secondary btn-sm" onclick="app.exportPlayersJSON()">📋 Export JSON</button>
+          <button class="btn btn-secondary btn-sm" onclick="exportCtrl.exportAuctionResultsPDF()">📄 Auction PDF</button>
+          <button class="btn btn-outline-gold btn-sm" onclick="app.lockAdmin()">🔒 Lock Admin</button>
+        </div>
+      </div>
+
+      <div class="tabs-header" id="orgTabs">
+        <button class="tab-btn active" data-orgtab="auction-control">⚡ Live Auction Controller</button>
+        <button class="tab-btn" data-orgtab="approvals">📋 Player Registrations</button>
+        <button class="tab-btn" data-orgtab="teams">🛡️ Team Config</button>
+        <button class="tab-btn" data-orgtab="settings">⚙️ Tournament Rules & Settings</button>
+        <button class="tab-btn" data-orgtab="unsold">🔄 Unsold Pool</button>
+      </div>
+
+      <!-- Org Tab 1: Live Auction Controller -->
+      <div id="orgtab-auction-control" class="org-tab-pane" style="display: block;">
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.5rem;">
+          <h3 style="font-family: var(--font-display); margin-bottom: 1rem;">1. Select Player for Bidding</h3>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <select class="form-select" id="orgPlayerSelect" style="flex: 1; min-width: 260px;">
+              <option value="">-- Choose Available Approved Player --</option>
+            </select>
+            <button class="btn btn-primary" onclick="app.orgSelectPlayer()">Load Player to Auction Stage</button>
+          </div>
+        </div>
+
+        <div class="auction-arena">
+          <div class="auction-main-card">
+            <div class="auction-player-hero">
+              <img id="orgPlayerPhoto" src="" class="auction-player-photo-lg" alt="Player Photo">
+              <div>
+                <div class="badge badge-batsman" id="orgPlayerCategory">Category</div>
+                <h2 style="font-size: 2rem; font-family: var(--font-display); font-weight: 800; margin: 0.5rem 0 0.25rem;" id="orgPlayerName">No Player Loaded</h2>
+                <div style="color: var(--accent-gold); font-weight: 700;" id="orgPlayerId">PLY-0000</div>
+                <div style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-secondary);" id="orgPlayerStyles">Batting: - | Bowling: -</div>
+              </div>
+            </div>
+
+            <div class="auction-bid-display">
+              <div>
+                <div style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase;">Active Bid</div>
+                <div class="current-bid-amount" id="orgCurrentBid">₹0</div>
+              </div>
+
+              <div class="highest-bidder-box">
+                <div class="highest-bidder-logo" id="orgBidderLogo">🏆</div>
+                <div>
+                  <div style="font-size: 0.8rem; color: var(--text-secondary);">Highest Bidder</div>
+                  <div style="font-weight: 700; color: var(--text-primary);" id="orgBidderTeamName">None</div>
+                </div>
+              </div>
+
+              <div class="timer-badge" id="orgTimerBadge">⏱️ 30s</div>
+            </div>
+
+            <!-- Organizer Action Controls -->
+            <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+              <button class="btn btn-success btn-lg" onclick="auction.startBidding()">▶️ Start Bidding</button>
+              <button class="btn btn-secondary btn-lg" onclick="auction.pauseBidding()">⏸️ Pause</button>
+              <button class="btn btn-secondary" onclick="auction.adjustTimer(10)">⏱️ +10s</button>
+              <button class="btn btn-secondary" onclick="auction.adjustTimer(-10)">⏱️ -10s</button>
+              <button class="btn btn-primary btn-lg" onclick="app.orgMarkSold()">🔨 SOLD</button>
+              <button class="btn btn-danger btn-lg" onclick="app.orgMarkUnsold()">❌ UNSOLD</button>
+            </div>
+          </div>
+
+          <div>
+            <h3 style="font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 0.75rem;">Auction Stream</h3>
+            <div class="bid-feed" id="orgBidFeed"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Org Tab 2: Player Registrations Approval -->
+      <div id="orgtab-approvals" class="org-tab-pane" style="display: none;">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Photo</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>City</th>
+                <th>Base Price</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="orgApprovalsTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Org Tab 3: Team Configuration -->
+      <div id="orgtab-teams" class="org-tab-pane" style="display: none;">
+        <div class="section-header">
+          <h3>Manage Competing Teams</h3>
+          <button class="btn btn-primary btn-sm" onclick="app.openAddTeamModal()">+ Add New Team</button>
+        </div>
+        <div class="players-grid" id="orgTeamsGrid"></div>
+      </div>
+
+      <!-- Org Tab 4: Tournament Rules & Config -->
+      <div id="orgtab-settings" class="org-tab-pane" style="display: none;">
+        <form id="orgSettingsForm" onsubmit="app.saveOrgSettings(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Tournament Name</label>
+              <input type="text" class="form-input" id="cfgName" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tournament Date</label>
+              <input type="date" class="form-input" id="cfgDate" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Venue / Stadium</label>
+              <input type="text" class="form-input" id="cfgVenue" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Auction Purse Per Team (₹)</label>
+              <input type="number" class="form-input" id="cfgPurse" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Min Squad Size</label>
+              <input type="number" class="form-input" id="cfgMinSquad" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Max Squad Size</label>
+              <input type="number" class="form-input" id="cfgMaxSquad" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Min Batsmen Required</label>
+              <input type="number" class="form-input" id="cfgMinBatsmen" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Min Bowlers Required</label>
+              <input type="number" class="form-input" id="cfgMinBowlers" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Min All-Rounders Required</label>
+              <input type="number" class="form-input" id="cfgMinAllRounders" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Min Wicket-Keepers Required</label>
+              <input type="number" class="form-input" id="cfgMinKeepers" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Default Base Price (₹)</label>
+              <input type="number" class="form-input" id="cfgBasePrice" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Bid Increment Step (₹)</label>
+              <input type="number" class="form-input" id="cfgBidStep" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contact Phone</label>
+              <input type="text" class="form-input" id="cfgPhone">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contact Email</label>
+              <input type="email" class="form-input" id="cfgEmail">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contact City</label>
+              <input type="text" class="form-input" id="cfgCity">
+            </div>
+            <div class="form-group full-width">
+              <label class="form-label">Tournament Rules</label>
+              <textarea class="form-textarea" id="cfgRules" rows="4"></textarea>
+            </div>
+          </div>
+          <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+            <button type="submit" class="btn btn-primary">Save Tournament Settings</button>
+            <button type="button" class="btn btn-danger" onclick="if(confirm('Reset all auction data to default?')) store.resetAllData()">⚠️ Reset All Data</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Org Tab 5: Unsold Pool -->
+      <div id="orgtab-unsold" class="org-tab-pane" style="display: none;">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Photo</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Base Price</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="orgUnsoldTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- 6. CAPTAIN PORTAL DASHBOARD VIEW -->
+    <section id="view-captain" class="view-section">
+      <div class="section-header">
+        <h2 class="section-title">🧢 Captain Bidding Console</h2>
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <label style="font-weight: 600; font-size: 0.9rem;">Select Your Team:</label>
+          <select class="form-select" id="capTeamSelect" onchange="captain.setActiveTeam(this.value)">
+            <!-- Rendered dynamically -->
+          </select>
+        </div>
+      </div>
+
+      <!-- Captain Team Budget & Stats Header -->
+      <div id="captainHeaderCard">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Category Deficiency Warning Bar -->
+      <div id="captainDeficiencyBar" style="margin: 1rem 0;"></div>
+
+      <!-- Captain Live Bidding Console -->
+      <div class="auction-arena" style="margin-top: 1.5rem;">
+        <div class="auction-main-card">
+          <div class="auction-player-hero">
+            <img id="capPlayerPhoto" src="" class="auction-player-photo-lg" alt="Player Photo">
+            <div>
+              <div class="badge badge-batsman" id="capPlayerCategory">Category</div>
+              <h2 style="font-size: 2rem; font-family: var(--font-display); font-weight: 800; margin: 0.5rem 0 0.25rem;" id="capPlayerName">No Active Bidding</h2>
+              <div style="color: var(--accent-gold); font-weight: 700;" id="capPlayerId">PLY-0000</div>
+              <div style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-secondary);" id="capPlayerStyles">Batting: - | Bowling: -</div>
+            </div>
+          </div>
+
+          <div class="auction-bid-display">
+            <div>
+              <div style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase;">Current Highest Bid</div>
+              <div class="current-bid-amount" id="capCurrentBid">₹0</div>
+            </div>
+
+            <div class="highest-bidder-box">
+              <div class="highest-bidder-logo" id="capBidderLogo">🏆</div>
+              <div>
+                <div style="font-size: 0.8rem; color: var(--text-secondary);">Holding Bid</div>
+                <div style="font-weight: 700; color: var(--text-primary);" id="capBidderTeamName">None</div>
+              </div>
+            </div>
+
+            <div class="timer-badge" id="capTimerBadge">⏱️ 30s</div>
+          </div>
+
+          <!-- Bidding Console Buttons -->
+          <div class="bidding-pad">
+            <button class="btn btn-primary btn-lg" id="btnCapSubmitBid" onclick="app.capPlaceBid()">🔨 PLACE BID</button>
+            <button class="btn btn-outline-gold" id="btnCapPassBid" onclick="app.showToast('Passed on current bid.', 'info')">✋ PASS</button>
+          </div>
+          <div id="capBidError" style="color: var(--accent-red); font-size: 0.9rem; margin-top: 0.75rem; font-weight: 600;"></div>
+        </div>
+
+        <div>
+          <h3 style="font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 0.75rem;">Bid Stream</h3>
+          <div class="bid-feed" id="capBidFeed"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Mobile Navigation Bottom Drawer Bar -->
+  <nav class="mobile-nav-bar">
+    <a class="mobile-nav-item active" data-view="landing" onclick="app.navigateTo('landing')">
+      <span class="mobile-nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a class="mobile-nav-item" data-view="players" onclick="app.navigateTo('players')">
+      <span class="mobile-nav-icon">👥</span>
+      <span>Players</span>
+    </a>
+    <a class="mobile-nav-item" data-view="public-live" onclick="app.navigateTo('public-live')">
+      <span class="mobile-nav-icon">🔴</span>
+      <span>Auction</span>
+    </a>
+    <a class="mobile-nav-item" data-view="squads" onclick="app.navigateTo('squads')">
+      <span class="mobile-nav-icon">🛡️</span>
+      <span>Squads</span>
+    </a>
+    <a class="mobile-nav-item" data-view="organizer" onclick="app.navigateTo('organizer')">
+      <span class="mobile-nav-icon">🔒</span>
+      <span>Admin</span>
+    </a>
+  </nav>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+
+  <!-- MODAL: PLAYER REGISTRATION -->
+  <div class="modal-overlay" id="modalRegister">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">🏏 Player Registration Form</h3>
+        <button class="modal-close" onclick="app.closeRegisterModal()">&times;</button>
+      </div>
+      <form id="playerRegisterForm" onsubmit="app.submitPlayerRegistration(event)">
+        <div class="modal-body">
+          <!-- Profile Photo Crop Picker -->
+          <div style="text-align: center; margin-bottom: 1.5rem;">
+            <img id="registerPhotoPreview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=300&auto=format&fit=crop" style="width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-gold); margin-bottom: 0.5rem;">
+            <div>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('filePhotoInput').click()">📸 Upload & Crop Profile Photo</button>
+              <input type="file" id="filePhotoInput" accept="image/*" style="display: none;" onchange="app.handlePhotoSelect(event)">
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input type="text" class="form-input" id="regFullName" required placeholder="e.g. Rahul Sharma">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Display Name / Jersey Name</label>
+              <input type="text" class="form-input" id="regDisplayName" placeholder="e.g. Rahul">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Age *</label>
+              <input type="number" class="form-input" id="regAge" required min="14" max="60" value="22">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mobile Number *</label>
+              <input type="tel" class="form-input" id="regMobile" required placeholder="10 digit mobile">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" id="regEmail" placeholder="player@email.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">City / Village *</label>
+              <input type="text" class="form-input" id="regCity" required placeholder="e.g. Mumbai">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Playing Role / Category *</label>
+              <select class="form-select" id="regCategory" required>
+                <option value="Batsman">🏏 Batsman</option>
+                <option value="Bowler">🎯 Bowler</option>
+                <option value="All-Rounder">🔄 All-Rounder</option>
+                <option value="Wicket-Keeper">🧤 Wicket-Keeper</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Base Price (₹) *</label>
+              <input type="number" class="form-input" id="regBasePrice" required min="1000" step="500" value="2000" placeholder="e.g. 2000">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Batting Style *</label>
+              <select class="form-select" id="regBattingStyle" required>
+                <option value="Right Hand">Right Hand Batsman</option>
+                <option value="Left Hand">Left Hand Batsman</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Bowling Style *</label>
+              <select class="form-select" id="regBowlingStyle" required>
+                <option value="Right Arm Fast">Right Arm Fast</option>
+                <option value="Right Arm Medium">Right Arm Medium</option>
+                <option value="Left Arm Fast">Left Arm Fast</option>
+                <option value="Left Arm Medium">Left Arm Medium</option>
+                <option value="Right Arm Spin">Right Arm Spin</option>
+                <option value="Left Arm Spin">Left Arm Spin</option>
+                <option value="None">None</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Experience (Years)</label>
+              <input type="number" class="form-input" id="regExperience" value="3" min="0">
+            </div>
+            <div class="form-group full-width">
+              <label class="form-label">Previous Tournament Experience</label>
+              <input type="text" class="form-input" id="regPrevExp" placeholder="e.g. Local T20 Cup Winner 2025">
+            </div>
+            <div class="form-group full-width">
+              <label class="form-label">Player Description / Bio</label>
+              <textarea class="form-textarea" id="regDescription" rows="2" placeholder="Brief info about your playing style..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="app.closeRegisterModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit Player Registration</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- MODAL: PLAYER FULL DETAILS -->
+  <div class="modal-overlay" id="modalPlayerDetails">
+    <div class="modal-card" style="max-width: 580px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="detPlayerTitle">🏏 Player Profile Details</h3>
+        <button class="modal-close" onclick="app.closePlayerDetailsModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="detPlayerBody">
+        <!-- Rendered dynamically -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="app.closePlayerDetailsModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MODAL: ADMIN AUTHENTICATION -->
+  <div class="modal-overlay" id="modalAdminAuth">
+    <div class="modal-card" style="max-width: 420px;">
+      <div class="modal-header">
+        <h3 class="modal-title">🔒 Admin Protection</h3>
+        <button class="modal-close" onclick="app.closeAdminAuthModal()">&times;</button>
+      </div>
+      <form id="adminAuthForm" onsubmit="app.submitAdminAuth(event)">
+        <div class="modal-body">
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.25rem;">
+            Please enter Admin Password to access Organizer Hub & Controls.
+          </p>
+          <div class="form-group">
+            <label class="form-label">Admin Password *</label>
+            <input type="password" class="form-input" id="adminPasswordInput" placeholder="Enter password (default: 1234)" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="app.closeAdminAuthModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Unlock Admin</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- MODAL: IMAGE CROPPER -->
+  <div class="modal-overlay" id="modalCropper">
+    <div class="modal-card" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title">🖼️ Crop Profile Photo</h3>
+        <button class="modal-close" onclick="app.closeCropperModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="cropperWrapper"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="app.closeCropperModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="app.applyCrop()">Apply Crop</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MODAL: REGISTER / EDIT TEAM & CAPTAIN -->
+  <div class="modal-overlay" id="modalAddTeam">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTeamTitle">🧢 Register Team & Captain</h3>
+        <button class="modal-close" onclick="app.closeAddTeamModal()">&times;</button>
+      </div>
+      <form id="addTeamForm" onsubmit="app.submitAddTeam(event)">
+        <input type="hidden" id="editingTeamId" value="">
+        <div class="modal-body">
+          <div style="text-align: center; margin-bottom: 1.25rem;">
+            <img id="captainPhotoPreview" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-gold); margin-bottom: 0.5rem;">
+            <div>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('fileCaptainPhotoInput').click()">📸 Upload Captain Photo</button>
+              <input type="file" id="fileCaptainPhotoInput" accept="image/*" style="display: none;" onchange="app.handleCaptainPhotoSelect(event)">
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Team Name *</label>
+              <input type="text" class="form-input" id="teamNameInput" required placeholder="e.g. Royal Warriors">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Short Code *</label>
+              <input type="text" class="form-input" id="teamCodeInput" required placeholder="e.g. RW" maxlength="4">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Captain Full Name *</label>
+              <input type="text" class="form-input" id="teamCaptainInput" required placeholder="e.g. Ravi Kumar">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Captain Login PIN (for Portal Login) *</label>
+              <input type="password" class="form-input" id="teamPinInput" value="1234" required maxlength="6" placeholder="4-6 digit PIN">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="app.closeAddTeamModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnSaveTeam">Register Team & Captain</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="./js/store.js"></script>
+  <script src="./js/cropper.js"></script>
+  <script src="./js/auction.js"></script>
+  <script src="./js/organizer.js"></script>
+  <script src="./js/captain.js"></script>
+  <script src="./js/export.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>
