@@ -387,11 +387,11 @@ export default function App() {
   // ---------------- 2. MAIN APPLICATION ----------------
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-white font-sans antialiased selection:bg-cyan-500 selection:text-white pb-16">
-      
+
       {/* STICKY HEADER WITH GLASSMORPHISM */}
       <header className="sticky top-0 z-40 backdrop-blur-xl bg-slate-950/80 border-b border-white/10 px-4 sm:px-8 py-4 transition-all">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          
+
           {/* Brand Logo & Tournament Meta */}
           <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
             <div className="flex items-center gap-3">
@@ -417,7 +417,7 @@ export default function App() {
 
           {/* Desktop Live Count & Admin Access Pill */}
           <div className="flex items-center gap-3 sm:gap-4 w-full md:w-auto justify-between md:justify-end">
-            
+
             {/* Live Registration Count */}
             <div className="hidden md:flex items-center gap-2.5 px-4 py-2 bg-red-500/10 border border-red-500/30 rounded-full text-xs sm:text-sm font-extrabold text-red-400 shadow-inner">
               <span className="relative flex h-3 w-3">
@@ -458,22 +458,20 @@ export default function App() {
         <div className="max-w-7xl mx-auto mt-4 pt-3 border-t border-white/10 flex items-center justify-center gap-2 sm:gap-4">
           <button
             onClick={() => setActiveTab('register')}
-            className={`px-5 sm:px-8 py-2.5 rounded-full font-black text-xs sm:text-sm transition-all duration-300 shadow-md cursor-pointer flex items-center gap-2 ${
-              activeTab === 'register'
-                ? 'bg-gradient-to-r from-emerald-400 to-cyan-400 text-slate-950 shadow-cyan-500/20 scale-105'
-                : 'bg-white/10 text-slate-300 hover:bg-white/20 hover:text-white'
-            }`}
+            className={`px-5 sm:px-8 py-2.5 rounded-full font-black text-xs sm:text-sm transition-all duration-300 shadow-md cursor-pointer flex items-center gap-2 ${activeTab === 'register'
+              ? 'bg-gradient-to-r from-emerald-400 to-cyan-400 text-slate-950 shadow-cyan-500/20 scale-105'
+              : 'bg-white/10 text-slate-300 hover:bg-white/20 hover:text-white'
+              }`}
           >
             📝 Register
           </button>
 
           <button
             onClick={() => setActiveTab('auction')}
-            className={`px-5 sm:px-8 py-2.5 rounded-full font-black text-xs sm:text-sm transition-all duration-300 shadow-md cursor-pointer flex items-center gap-2 ${
-              activeTab === 'auction'
-                ? 'bg-gradient-to-r from-emerald-400 to-cyan-400 text-slate-950 shadow-cyan-500/20 scale-105'
-                : 'bg-white/10 text-slate-300 hover:bg-white/20 hover:text-white'
-            }`}
+            className={`px-5 sm:px-8 py-2.5 rounded-full font-black text-xs sm:text-sm transition-all duration-300 shadow-md cursor-pointer flex items-center gap-2 ${activeTab === 'auction'
+              ? 'bg-gradient-to-r from-emerald-400 to-cyan-400 text-slate-950 shadow-cyan-500/20 scale-105'
+              : 'bg-white/10 text-slate-300 hover:bg-white/20 hover:text-white'
+              }`}
           >
             🏏 Auction Pool ({players.length})
           </button>
@@ -486,11 +484,10 @@ export default function App() {
                 setShowAdminLoginModal(true);
               }
             }}
-            className={`px-5 sm:px-8 py-2.5 rounded-full font-black text-xs sm:text-sm transition-all duration-300 shadow-md cursor-pointer flex items-center gap-2 ${
-              activeTab === 'admin'
-                ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-slate-950 shadow-amber-500/20 scale-105'
-                : 'bg-white/10 text-slate-300 hover:bg-white/20 hover:text-white'
-            }`}
+            className={`px-5 sm:px-8 py-2.5 rounded-full font-black text-xs sm:text-sm transition-all duration-300 shadow-md cursor-pointer flex items-center gap-2 ${activeTab === 'admin'
+              ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-slate-950 shadow-amber-500/20 scale-105'
+              : 'bg-white/10 text-slate-300 hover:bg-white/20 hover:text-white'
+              }`}
           >
             👑 Admin ({players.length})
           </button>
@@ -611,7 +608,7 @@ export default function App() {
         {/* ---------------- VIEW 2: AUCTION PLAYER CARDS GRID ---------------- */}
         {activeTab === 'auction' && (
           <div className="space-y-6">
-            
+
             {/* SEARCH & ROLE FILTER BAR */}
             <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="relative w-full md:w-80">
@@ -630,11 +627,10 @@ export default function App() {
                   <button
                     key={role}
                     onClick={() => setRoleFilter(role)}
-                    className={`px-3.5 py-1.5 rounded-xl font-extrabold text-xs whitespace-nowrap transition cursor-pointer ${
-                      roleFilter === role
-                        ? 'bg-cyan-400 text-slate-950 shadow-md'
-                        : 'bg-white/10 text-slate-300 hover:bg-white/20'
-                    }`}
+                    className={`px-3.5 py-1.5 rounded-xl font-extrabold text-xs whitespace-nowrap transition cursor-pointer ${roleFilter === role
+                      ? 'bg-cyan-400 text-slate-950 shadow-md'
+                      : 'bg-white/10 text-slate-300 hover:bg-white/20'
+                      }`}
                   >
                     {role}
                   </button>
@@ -664,7 +660,7 @@ export default function App() {
                   >
                     <div>
                       <div className="flex items-start justify-between gap-4 mb-4">
-                        
+
                         {/* Gradient Avatar Circle */}
                         <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-yellow-400 to-pink-500 flex items-center justify-center text-white text-2xl font-black shadow-lg ring-2 ring-white/30 shrink-0">
                           {player.name.charAt(0).toUpperCase()}
@@ -685,7 +681,7 @@ export default function App() {
                       <h3 className="text-xl font-black text-white group-hover:text-yellow-300 transition truncate">
                         {player.name}
                       </h3>
-                      
+
                       <div className="mt-3 space-y-1.5 text-xs font-bold text-slate-300">
                         <div className="flex items-center gap-2">
                           <span className="text-slate-400">📍 Village:</span>
@@ -712,7 +708,7 @@ export default function App() {
         {/* ---------------- VIEW 3: ADMIN DASHBOARD ---------------- */}
         {activeTab === 'admin' && (
           <div className="space-y-8">
-            
+
             {/* BIG BEAUTIFUL GRADIENT CARD (YELLOW TO ORANGE) */}
             <div className="bg-gradient-to-r from-yellow-400 via-amber-400 to-orange-500 text-slate-950 p-6 sm:p-10 rounded-[30px] shadow-2xl relative overflow-hidden">
               <div className="absolute -right-10 -bottom-10 w-48 h-48 bg-white/20 rounded-full blur-2xl"></div>
@@ -758,7 +754,7 @@ export default function App() {
 
             {/* ADMIN ROSTER & RESET ACTION BUTTONS */}
             <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-[30px] p-6 sm:p-8 space-y-6">
-              
+
               <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                 <div>
                   <h3 className="text-xl font-black text-white">Full Player Roster</h3>
